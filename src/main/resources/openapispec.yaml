@@ -1,0 +1,92 @@
+openapi: 3.0.0
+info:
+   title: "Open API and Project Reactor Example by Dinesh Sharma"
+   version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+    description: local
+paths:
+  /customer:
+    get:
+      summary: Get list of all customers
+      operationId: getAllCustomers
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Get list of all customers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+    post:
+      summary: Create customer
+      operationId: createCustomer
+      security:
+        - api_key: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Customer"
+      responses:
+        200:
+          description: Customer saved   
+
+  /customer/{lastName}:
+    parameters:
+      - name: lastName
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get list of all customers by last name
+      operationId: getByLastName
+      responses:
+        200:
+          description: Get customer list by last name
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      summary: updateCustomer
+      operationId: updateCustomer
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Customer"
+      responses:
+        200:
+          description: Updated customer by lastName
+          content:
+            application/json:
+              schema:
+                type: object
+          
+components:
+  securitySchemes:
+    api_key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+      additionalProperties: false
+      required:
+        - firstName
+        - lastName
